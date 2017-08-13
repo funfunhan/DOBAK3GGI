@@ -270,25 +270,25 @@ class MyAi
       elsif (@@round == 19)
         if(my_money == 32)
           if (win_percent > 99)
-            올인
+            #올인
           else
-            다이
+            #다이
           end
         elsif(my_money == 31)
           if (win_percent > 99)
-            올인
+            #올인
           elsif(win_percent < 99 && win_percent > 65)
-            올인
+            #올인
           else
-            다이
+            #다이
           end
         elsif(my_money == 30)
           if (win_percent > 99)
-            +1
+            #+1
           elsif(win_percent < 99 && win_percent > 65)
-            올인
+            #올인
           else
-            다이
+            #다이
           end
         elsif(my_money == 29)
 
