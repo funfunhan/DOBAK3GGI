@@ -192,15 +192,15 @@ class MyAi
     if (bet_history.count % 2) == 0
         if (@@round == 1 || @@round == 11)
           ## 기초 로직
-          if opposit_play_card == 1
+          if opposite_play_card == 1
 
-          elsif opposit_play_card == 2
+          elsif opposite_play_card == 2
             my_total_bet <= 5
-          elsif opposit_play_card == 3
+          elsif opposite_play_card == 3
             my_total_bet <= 4
-          elsif opposit_play_card == 4
+          elsif opposite_play_card == 4
             my_total_bet <= 3
-          elsif opposit_play_card == 5
+          elsif opposite_play_card == 5
             my_total_bet <= 2
           else
             this_bet == -1
