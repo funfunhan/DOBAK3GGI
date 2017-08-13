@@ -12,6 +12,7 @@ class MyAi
   @@MyCoinHistory = []
   @@RivalCoinHistory = []
 
+
   @@record_of_Rival_predict=[]  # 상대방이 내 카드를 보고 예측한 승률(p)에 따른 첫 배팅 기록을 정리
                                 # 0 - 0% <= p < 20%
                                 # 1 - 20% <= p < 40%
@@ -158,11 +159,18 @@ class MyAi
     # 변칙로직 1 - 무조건 승리에 대한 코드
     ## 코인 갯수 차이
     ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
-      current_round_coin_gap = (my_money * 2) - 58
+    current_round_coin_gap = (my_money * 2) - 58
     ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
-      if current_round_coin_gap > ((21 - @@round)*2)
-        victory = true
-      end
+
+
+
+
+
+    stability = ((current_round_coin_gap.to_f) / ((21 - @@round).to_f))
+    # stablity는 안정도로 2보다 큰 경우에 무조건 이김 (2면 비김)
+    if stability > 2
+      victory = true
+    end
 
 
     # 변칙로직 2 - 그룹별 승리 확률 계산 및 적용
@@ -184,15 +192,15 @@ class MyAi
     if (bet_history.count % 2) == 0
         if (@@round == 1 || @@round == 11)
           ## 기초 로직
-          if opposit_play_card == 1
+          if opposite_play_card == 1
 
-          elsif opposit_play_card == 2
+          elsif opposite_play_card == 2
             my_total_bet <= 5
-          elsif opposit_play_card == 3
+          elsif opposite_play_card == 3
             my_total_bet <= 4
-          elsif opposit_play_card == 4
+          elsif opposite_play_card == 4
             my_total_bet <= 3
-          elsif opposit_play_card == 5
+          elsif opposite_play_card == 5
             my_total_bet <= 2
           else
             this_bet == -1
