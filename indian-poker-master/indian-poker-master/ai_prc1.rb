@@ -84,24 +84,15 @@ class MyAi
 
 
 
-    ## 코인 갯수 차이
-    ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
-    current_round_coin_gap = (my_money * 2) - 58
-    ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
-    if current_round_coin_gap > ((21 - @@round)*2)
-      victory = true
-    end
 
-
-
-    ## 확률 계싼
+    ## 확률 계산
     ### 상대방 패보다 내 패가 좋을 때 카드 개수(+ 안 좋을때 카드 개수)
     can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number >= opposite_play_card }
     can_lose_to_enemy_card_count = left_card_list.count - can_win_to_enemy_card_count
 
     ### 상대방 패를 이길 혹률 (+ 질 확률)
-    win_percant = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
-    lose_percent = 100.0 - win_percant
+    win_percent = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
+    lose_percent = 100.0 - win_percent
 
     ## 라운드가 10일떄는 상대방의 패와 나의 패 모두 알 수 있으므로 바로 저장
     if @@round == 10
@@ -161,6 +152,31 @@ class MyAi
 
     ##########################################################################################
 
+
+
+
+    # 변칙로직 1 - 무조건 승리에 대한 코드
+    ## 코인 갯수 차이
+    ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
+    current_round_coin_gap = (my_money * 2) - 58
+    ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
+    if current_round_coin_gap > ((21 - @@round)*2)
+      victory = true
+    end
+
+
+    # 변칙로직 2 - 그룹별 승리 확률 계산 및 적용
+    ##
+
+
+
+    # 변칙로직 3 - 랜덤 변수 활용
+    ## 랜덤변수 선언
+
+
+
+    # 변칙로직 4 - 상대방 배팅에 대해서 분석 후 추가 배팅 로직 설정
+    ## 배팅 로직 설정
 
     ## 배팅 방법
     ### 선공일때
@@ -246,8 +262,7 @@ class MyAi
 
     # Return values
     ## 나의 배팅수, 이길 확률, 남은 카드 리스트, 상대패 대비 내가 이길수 있는 남은 카드의 수, 현재 라운드
-    return this_bet, win_percant, left_card_list, can_win_to_enemy_card_count, @@round, @@pRival, @@pMine, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory
-
+    return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @@pRival, @@pMine, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory
 
   end
 
