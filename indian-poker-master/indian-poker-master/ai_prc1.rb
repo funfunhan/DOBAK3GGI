@@ -88,6 +88,7 @@ class MyAi
       victory = true
     end
 
+    youngil = 0
 
 
     ## 확률 계싼
