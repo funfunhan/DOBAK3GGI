@@ -12,7 +12,7 @@ class MyAi
   @@MyCoinHistory = []
   @@RivalCoinHistory = []
 
-  @@record_of_Rival_predict=[]  # 상대방이 내 카드를 보고 예측한 승률(p)에 따른 배팅 기록을 정리
+  @@record_of_Rival_predict=[]  # 상대방이 내 카드를 보고 예측한 승률(p)에 따른 첫 배팅 기록을 정리
                                 # 0 - 0% <= p < 20%
                                 # 1 - 20% <= p < 40%
                                 # 2 - 40% <= p < 60%
@@ -21,6 +21,9 @@ class MyAi
                                 # 5 - p == 100%
                                 ## 각 원소는 배열로 이루어져 있으며(2차원 배열), 0번째 인덱스는 현재 확률모델 수치의 가용 여부를 표시하는 스위치이다.
                                 ## ex) @@record_of_Rival_predic[1][0] == true 이면 20% <= p < 40% 사이의 추측확률에 대해 신용할 수 있다.
+
+
+
 
   @@round = 0
   def calculate(info)
@@ -263,6 +266,7 @@ class MyAi
     # Return values
     ## 나의 배팅수, 이길 확률, 남은 카드 리스트, 상대패 대비 내가 이길수 있는 남은 카드의 수, 현재 라운드
     return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @@pRival, @@pMine, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory
+
 
   end
 
