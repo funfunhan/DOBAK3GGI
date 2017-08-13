@@ -265,10 +265,41 @@ class MyAi
 
         #end
 
-      elsif (@@round == 9 || @@round == 19)
+      elsif (@@round == 9)
+
+      elsif (@@round == 19)
+        if(my_money == 32)
+          if (win_percent > 99)
+            #올인
+          else
+            #다이
+          end
+        elsif(my_money == 31)
+          if (win_percent > 99)
+            #올인
+          elsif(win_percent < 99 && win_percent > 65)
+            #올인
+          else
+            #다이
+          end
+        elsif(my_money == 30)
+          if (win_percent > 99)
+            #+1
+          elsif(win_percent < 99 && win_percent > 65)
+            #올인
+          else
+            #다이
+          end
+        elsif(my_money == 29)
+
+        else
+
+
         ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
-      else ## @@round == 10 or 20
+      elsif(@@round == 10) ## @@round == 10
+
+      else ## @@round == 20
 
       end
     end
