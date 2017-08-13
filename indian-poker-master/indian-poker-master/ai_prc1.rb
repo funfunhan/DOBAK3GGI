@@ -284,15 +284,27 @@ class MyAi
           end
         elsif(my_money == 30)
           if (win_percent > 99)
-            #+1
+            #받고+1
           elsif(win_percent < 99 && win_percent > 65)
             #올인
           else
             #다이
           end
         elsif(my_money == 29)
-
-        else
+          if (win_percent > 99)
+            #받고+1
+          elsif(win_percent < 99 && win_percent > 65)
+            #받고+1
+          else
+            #올인
+          end
+        elsif(my_money == 28)
+        else ##my_money < 28  패배확실상황
+          if(win_percent < 5)
+            #다이
+          else
+            #무승부 + 1개 배팅
+          end
 
 
         ## 9, 19라운드는 특별한 상황에 대한 로직 설정
