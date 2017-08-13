@@ -12,7 +12,7 @@ class MyAi
   @@MyCoinHistory = []
   @@RivalCoinHistory = []
 
-  @@record_of_Rival_predict=[]  # 상대방이 내 카드를 보고 예측한 승률(p)에 따른 배팅 기록을 정리
+  @@record_of_Rival_predict=[]  # 상대방이 내 카드를 보고 예측한 승률(p)에 따른 첫 배팅 기록을 정리
                                 # 0 - 0% <= p < 20%
                                 # 1 - 20% <= p < 40%
                                 # 2 - 40% <= p < 60%
@@ -21,6 +21,9 @@ class MyAi
                                 # 5 - p == 100%
                                 ## 각 원소는 배열로 이루어져 있으며(2차원 배열), 0번째 인덱스는 현재 확률모델 수치의 가용 여부를 표시하는 스위치이다.
                                 ## ex) @@record_of_Rival_predic[1][0] == true 이면 20% <= p < 40% 사이의 추측확률에 대해 신용할 수 있다.
+
+
+
 
   @@round = 0
   def calculate(info)
@@ -88,7 +91,7 @@ class MyAi
       victory = true
     end
 
-    youngil = 0
+
 
 
     ## 확률 계싼
@@ -97,8 +100,8 @@ class MyAi
     can_lose_to_enemy_card_count = left_card_list.count - can_win_to_enemy_card_count
 
     ### 상대방 패를 이길 혹률 (+ 질 확률)
-    win_percant = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
-    lose_percent = 100.0 - win_percant
+    win_percent = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
+    lose_percent = 100.0 - win_percent
 
     if @@round == 10
       @@pMine.push(left_card_list.last)
@@ -166,7 +169,7 @@ class MyAi
         elsif ((@@round == 2 || @@round == 3) || (@@round == 12 || @@round == 13))
 
         elsif((@@round >= 4 && @@round <= 6) || (@@round >= 14 && @@round <= 16))
-
+ㅏㅏ
         elsif ((@@round == 7 || @@round == 8) || (@@round == 17 || @@round == 18))
 
         elsif (@@round == 9 || @@round == 19)
@@ -196,7 +199,7 @@ class MyAi
 
     # Return values
     ## 나의 배팅수, 이길 확률, 남은 카드 리스트, 상대패 대비 내가 이길수 있는 남은 카드의 수, 현재 라운드
-    return this_bet, win_percant, left_card_list, can_win_to_enemy_card_count, @@round, @@pRival, @@pMine, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory
+    return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @@pRival, @@pMine, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory
 
 
   end
