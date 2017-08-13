@@ -95,11 +95,6 @@ class MyAi
       victory = true
     end
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f68bdc3da7dc8b8a5a5d400b2b3918685525ba26
-
 
     ## 확률 계싼
     ### 상대방 패보다 내 패가 좋을 때 카드 개수(+ 안 좋을때 카드 개수)
@@ -189,9 +184,6 @@ class MyAi
           end
 
         elsif((@@round >= 4 && @@round <= 6) || (@@round >= 14 && @@round <= 16))
-<<<<<<< HEAD
-ㅏㅏ
-=======
           ## 기초 로직
 
           ## 데이터 기반 로직
@@ -199,7 +191,6 @@ class MyAi
 
           end
 
->>>>>>> f68bdc3da7dc8b8a5a5d400b2b3918685525ba26
         elsif ((@@round == 7 || @@round == 8) || (@@round == 17 || @@round == 18))
           ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
           #if
