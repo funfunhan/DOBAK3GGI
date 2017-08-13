@@ -87,16 +87,7 @@ class MyAi
 
 
 
-    ## 코인 갯수 차이
-    ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
-    current_round_coin_gap = (my_money * 2) - 58
-    ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
-    if current_round_coin_gap > ((21 - @@round)*2)
-      victory = true
-    end
-
-
-    ## 확률 계싼
+    ## 확률 계산
     ### 상대방 패보다 내 패가 좋을 때 카드 개수(+ 안 좋을때 카드 개수)
     can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number >= opposite_play_card }
     can_lose_to_enemy_card_count = left_card_list.count - can_win_to_enemy_card_count
@@ -164,11 +155,48 @@ class MyAi
     ##########################################################################################
 
 
+    # 변칙로직 1 - 무조건 승리에 대한 코드
+    ## 코인 갯수 차이
+    ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
+      current_round_coin_gap = (my_money * 2) - 58
+    ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
+      if current_round_coin_gap > ((21 - @@round)*2)
+        victory = true
+      end
+
+
+    # 변칙로직 2 - 그룹별 승리 확률 계산 및 적용
+    ##
+
+
+
+    # 변칙로직 3 - 랜덤 변수 활용
+    ## 랜덤변수 선언
+
+
+
+    # 변칙로직 4 - 상대방 배팅에 대해서 분석 후 추가 배팅 로직 설정
+    ## 배팅 로직 설정
+
+
     ## 배팅 방법
     ### 선공일때
     if (bet_history.count % 2) == 0
         if (@@round == 1 || @@round == 11)
           ## 기초 로직
+          if opposit_play_card == 1
+
+          elsif opposit_play_card == 2
+            my_total_bet <= 5
+          elsif opposit_play_card == 3
+            my_total_bet <= 4
+          elsif opposit_play_card == 4
+            my_total_bet <= 3
+          elsif opposit_play_card == 5
+            my_total_bet <= 2
+          else
+            this_bet == -1
+          end
 
           ## 데이터 기반 로직
           if @@round == 11
