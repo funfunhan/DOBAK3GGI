@@ -69,6 +69,17 @@ class MyAi
     ### 남은 카드 리스트의 총 갯수
     left_card_count = left_card_list.count
 
+
+    ## 코인 갯수 차이
+    ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
+    current_round_coin_gap = (my_money * 2) - 58
+    ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
+    if current_round_coin_gap > ((21 - @@round)*2)
+      victory = true
+    end
+
+
+
     ## 확률 계싼
     ### 상대방 패보다 내 패가 좋을 때 카드 개수(+ 안 좋을때 카드 개수)
     can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number >= opposite_play_card }
