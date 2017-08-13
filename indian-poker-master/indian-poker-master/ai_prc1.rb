@@ -36,6 +36,7 @@ class MyAi
       this_bet = MIN_DEFAULT_BET
     end
 
+
     # Write your own codes here
     #게임 시작
     ##턴이 시작되면 round 1씩 올림
@@ -57,6 +58,8 @@ class MyAi
         @@pMine.push(past_cards.last)
       end
     end
+
+
 
     ## 남은 카드
     ### 남은 카드 리스트
@@ -80,6 +83,7 @@ class MyAi
     left_card_count = left_card_list.count
 
 
+
     ## 코인 갯수 차이
     ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
     current_round_coin_gap = (my_money * 2) - 58
@@ -88,7 +92,6 @@ class MyAi
       victory = true
     end
 
-    youngil = 0
 
 
     ## 확률 계싼
@@ -100,6 +103,7 @@ class MyAi
     win_percant = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
     lose_percent = 100.0 - win_percant
 
+    ## 라운드가 10일떄는 상대방의 패와 나의 패 모두 알 수 있으므로 바로 저장
     if @@round == 10
       @@pMine.push(left_card_list.last)
     end
