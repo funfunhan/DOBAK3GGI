@@ -166,14 +166,37 @@ class MyAi
     ### 선공일때
     if (bet_history.count % 2) == 0
         if (@@round == 1 || @@round == 11)
+          ## 기초 로직
+
+          ## 데이터 기반 로직
+          if @@round == 11
+
+          end
 
         elsif ((@@round == 2 || @@round == 3) || (@@round == 12 || @@round == 13))
+          ## 기초 로직
+
+          ## 데이터 기반 로직
+          if @@round == 12 || @@round == 13
+
+          end
 
         elsif((@@round >= 4 && @@round <= 6) || (@@round >= 14 && @@round <= 16))
+          ## 기초 로직
+
+          ## 데이터 기반 로직
+          if @@round >= 14 && @@round <= 16
+
+          end
 
         elsif ((@@round == 7 || @@round == 8) || (@@round == 17 || @@round == 18))
+          ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
+          #if
+
+          #end
 
         elsif (@@round == 9 || @@round == 19)
+          ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
         else ## @@round == 10 or 20
 
@@ -183,14 +206,37 @@ class MyAi
     ### 후공일때
     if (bet_history.count % 2) == 0
       if (@@round == 1 || @@round == 11)
+        ## 기초 로직
+
+        ## 데이터 기반 로직
+        if @@round == 11
+
+        end
 
       elsif ((@@round == 2 || @@round == 3) || (@@round == 12 || @@round == 13))
+        ## 기초 로직
+
+        ## 데이터 기반 로직
+        if @@round == 12 || @@round == 13
+
+        end
 
       elsif((@@round >= 4 && @@round <= 6) || (@@round >= 14 && @@round <= 16))
+        ## 기초 로직
+
+        ## 데이터 기반 로직
+        if @@round >= 14 && @@round <= 16
+
+        end
 
       elsif ((@@round == 7 || @@round == 8) || (@@round == 17 || @@round == 18))
+        ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
+        #if
+
+        #end
 
       elsif (@@round == 9 || @@round == 19)
+        ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
       else ## @@round == 10 or 20
 
