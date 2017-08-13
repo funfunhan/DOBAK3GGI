@@ -39,6 +39,7 @@ class MyAi
       this_bet = MIN_DEFAULT_BET
     end
 
+
     # Write your own codes here
     #게임 시작
     ##턴이 시작되면 round 1씩 올림
@@ -60,6 +61,8 @@ class MyAi
         @@pMine.push(past_cards.last)
       end
     end
+
+
 
     ## 남은 카드
     ### 남은 카드 리스트
@@ -83,6 +86,7 @@ class MyAi
     left_card_count = left_card_list.count
 
 
+
     ## 코인 갯수 차이
     ### 코인 갯수 차이 계산 (a+b = 58 <=> b = 58-a <=> a-b = a-(58-a) = 2a-58)
     current_round_coin_gap = (my_money * 2) - 58
@@ -91,7 +95,10 @@ class MyAi
       victory = true
     end
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f68bdc3da7dc8b8a5a5d400b2b3918685525ba26
 
 
     ## 확률 계싼
@@ -103,6 +110,7 @@ class MyAi
     win_percent = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
     lose_percent = 100.0 - win_percent
 
+    ## 라운드가 10일떄는 상대방의 패와 나의 패 모두 알 수 있으므로 바로 저장
     if @@round == 10
       @@pMine.push(left_card_list.last)
     end
@@ -165,14 +173,41 @@ class MyAi
     ### 선공일때
     if (bet_history.count % 2) == 0
         if (@@round == 1 || @@round == 11)
+          ## 기초 로직
+
+          ## 데이터 기반 로직
+          if @@round == 11
+
+          end
 
         elsif ((@@round == 2 || @@round == 3) || (@@round == 12 || @@round == 13))
+          ## 기초 로직
+
+          ## 데이터 기반 로직
+          if @@round == 12 || @@round == 13
+
+          end
 
         elsif((@@round >= 4 && @@round <= 6) || (@@round >= 14 && @@round <= 16))
+<<<<<<< HEAD
 ㅏㅏ
+=======
+          ## 기초 로직
+
+          ## 데이터 기반 로직
+          if @@round >= 14 && @@round <= 16
+
+          end
+
+>>>>>>> f68bdc3da7dc8b8a5a5d400b2b3918685525ba26
         elsif ((@@round == 7 || @@round == 8) || (@@round == 17 || @@round == 18))
+          ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
+          #if
+
+          #end
 
         elsif (@@round == 9 || @@round == 19)
+          ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
         else ## @@round == 10 or 20
 
@@ -182,14 +217,37 @@ class MyAi
     ### 후공일때
     if (bet_history.count % 2) == 0
       if (@@round == 1 || @@round == 11)
+        ## 기초 로직
+
+        ## 데이터 기반 로직
+        if @@round == 11
+
+        end
 
       elsif ((@@round == 2 || @@round == 3) || (@@round == 12 || @@round == 13))
+        ## 기초 로직
+
+        ## 데이터 기반 로직
+        if @@round == 12 || @@round == 13
+
+        end
 
       elsif((@@round >= 4 && @@round <= 6) || (@@round >= 14 && @@round <= 16))
+        ## 기초 로직
+
+        ## 데이터 기반 로직
+        if @@round >= 14 && @@round <= 16
+
+        end
 
       elsif ((@@round == 7 || @@round == 8) || (@@round == 17 || @@round == 18))
+        ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
+        #if
+
+        #end
 
       elsif (@@round == 9 || @@round == 19)
+        ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
       else ## @@round == 10 or 20
 
