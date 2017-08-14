@@ -701,7 +701,7 @@ class MyAi
 
 
   def get_name
-    "prc2 AI"
+    "prc1 AI"
   end
 
   private
