@@ -674,6 +674,7 @@ class MyAi
             #올인
           end
         elsif(my_money == 28)
+          #무조건 올인
         else ##my_money < 28  패배확실상황
           if(win_percent < 5)
             #다이
@@ -687,6 +688,27 @@ class MyAi
       elsif @@round == 10  ## @@round == 10
 
       else ## @@round == 20
+        if(my_money == 31)
+          if(win_percent > 95) ##무승부 혹은 승리일 경우
+            #콜
+          else #패배
+            #다이
+          end
+        elsif(my_money == 30)
+          # 무조건 올인
+        elsif(my_money == 29)
+          # if 무승부x 승리일 경우만
+            # 콜
+          # else 무승부 포함 패배일경우
+            # 올인
+          # end
+        else ## my_money < 29 패배 확실
+          if (win_percent > 95)
+            #무승부갯수 + 1개 배팅
+          else
+            #올인
+          end
+        end
 
       end
     end
