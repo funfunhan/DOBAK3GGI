@@ -11,7 +11,7 @@ class MyAi
   @@pMBet=[]  # 지금까지의 나의 베팅 기록
   @@MyCoinHistory = []
   @@RivalCoinHistory = []
-
+  @@firstOrlast = []
 
   @@record_of_Rival_predict=[]  # 상대방이 내 카드를 보고 예측한 승률(p)에 따른 첫 배팅 기록을 정리
                                 # 0 - 0% <= p < 20%
@@ -28,6 +28,7 @@ class MyAi
 
   @@round = 0
   @@roundoffset = 0
+
   def calculate(info)
     opposite_play_card = info[0] # 상대방이 들고 있는 카드의 숫자
     past_cards = info[1]         # 지금까지 지나간 카드들 (배열)
@@ -44,10 +45,15 @@ class MyAi
 
     # Write your own codes here
     #게임 시작
+    @rival_card_history = []
+    @my_card_history = []
+    eachround = 0
+    maxindex = 0
     if (bet_history.count / 2) == 1
       @@round = @@round + 1
-      if @@round <= 10
+      if @@roundoffset == 0
         if @@round != (past_cards.count/2) + 1
+          @@firstOrlast.push(0)
           #이전라운드 추가 기록 + round + 1
           ## round가 1개 적게 카운트 된 정보를 먼저 입력
           @@MyCoinHistory.push(my_money)
@@ -55,92 +61,101 @@ class MyAi
           @@pRBet.push(1)
           @@pMBet.push(1)
 
-          if @@round == 1
-            @@pMine.push(past_cards[past_cards.length - 1])
-            @@pRival.push(past_cards[past_cards.length - 2])
-          else
-            if past_cards[past_cards.length - 4] > past_cards[past_cards.length - 3]
-              @@pMine.push(past_cards[past_cards.length - 3])
-              @@pRival.push(past_cards[past_cards.length - 4])
-            else
-              @@pMine.push(past_cards[past_cards.length - 4])
-              @@pRival.push(past_cards[past_cards.length - 3])
-            end
-          end
-
           ## 이후 round 를 정상화시켜 다시 입력
           @@round = @@round + 1
+          @@firstOrlast.push(1)
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
           @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
           @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
-          @@pRival.push(opposite_play_card)
 
-          if @@round != 2 && @@round != 12
-            if past_cards.last == @@pRival[@@pRival.length - 2]
-              @@pMine.push(past_cards[past_cards.length - 2])
+          maxindex = (@@firstOrlast.length-1)
+          while eachround < maxindex
+            if @@firstOrlast[eachround] == 1
+              @my_card_history.push(past_cards[(eachround*2)])
+              @rival_card_history.push(past_cards[(eachround*2)+1])
+              eachround = eachround + 1
             else
-              @@pMine.push(past_cards.last)
+              @my_card_history.push(past_cards[(eachround*2) +1])
+              @rival_card_history.push(past_cards[(eachround*2)])
+              eachround = eachround + 1
             end
           end
+          @rival_card_history.push(opposite_play_card)
 
         else
           #기본 로직
+          if (bet_history.count % 2) == 0
+            @@firstOrlast.push(1)
+          else
+            @@firstOrlast.push(0)
+          end
+
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
           if @@round != 1
             @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
             @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
           end
-          @@pRival.push(opposite_play_card)
 
           if @@round != 1 && @@round != 11
-            if past_cards.last == @@pRival[@@pRival.length - 2]
-              @@pMine.push(past_cards[past_cards.length - 2])
-            else
-              @@pMine.push(past_cards.last)
+            maxindex = (@@firstOrlast.length-1)
+            while eachround < maxindex
+              if (@@firstOrlast[eachround] == 1)
+                @my_card_history.push(past_cards[(eachround*2)])
+                @rival_card_history.push(past_cards[(eachround*2)+1])
+                eachround = eachround + 1
+              else
+                @my_card_history.push(past_cards[(eachround*2) +1])
+                @rival_card_history.push(past_cards[(eachround*2)])
+                eachround = eachround + 1
+              end
             end
           end
+          @rival_card_history.push(opposite_play_card)
         end
+
       else
+        @my_card_history = @my_card_history + @@pMine
+        @rival_card_history = @rival_card_history + @@pRival
         if @@round != (past_cards.count/2) + 11
-          #이전라운드 추가 기록 + round + 1
-          #이전라운드 추가 기록 + round + 1
-          ## round가 1개 적게 카운트 된 정보를 먼저 입력
+          @@firstOrlast.push(0)
           @@MyCoinHistory.push(my_money)
           @@RivalCoinHistory.push(60-(my_money))
           @@pRBet.push(1)
           @@pMBet.push(1)
 
-          if @@round == 1
-            @@pMine.push(past_cards[past_cards.length - 1])
-            @@pRival.push(past_cards[past_cards.length - 2])
-          else
-            if past_cards[past_cards.length - 4] > past_cards[past_cards.length - 3]
-              @@pMine.push(past_cards[past_cards.length - 3])
-              @@pRival.push(past_cards[past_cards.length - 4])
-            else
-              @@pMine.push(past_cards[past_cards.length - 4])
-              @@pRival.push(past_cards[past_cards.length - 3])
-            end
-          end
-
           ## 이후 round 를 정상화시켜 다시 입력
           @@round = @@round + 1
+          @@firstOrlast.push(1)
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
           @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
           @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
-          @@pRival.push(opposite_play_card)
 
-          if @@round != 2 && @@round != 12
-            if past_cards.last == @@pRival[@@pRival.length - 2]
-              @@pMine.push(past_cards[past_cards.length - 2])
-            else
-              @@pMine.push(past_cards.last)
+          if @@round != 11
+            maxindex = (@@firstOrlast.length-1)
+            eachround = 10
+            while eachround < maxindex
+              if @@firstOrlast[eachround] == 1
+                @my_card_history.push(past_cards[((eachround-10)*2)])
+                @rival_card_history.push(past_cards[((eachround-10)*2)+1])
+                eachround += 1
+              else
+                @my_card_history.push(past_cards[((eachround-10)*2) +1])
+                @rival_card_history.push(past_cards[((eachround-10)*2)])
+                eachround += 1
+              end
             end
           end
+          @rival_card_history.push(opposite_play_card)
+
         else
+          if bet_history.count % 2 == 0
+            @@firstOrlast.push(1)
+          else
+            @@firstOrlast.push(0)
+          end
           #기본 로직
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
@@ -148,15 +163,23 @@ class MyAi
             @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
             @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
           end
-          @@pRival.push(opposite_play_card)
 
-          if @@round != 1 && @@round != 11
-            if past_cards.last == @@pRival[@@pRival.length - 2]
-              @@pMine.push(past_cards[past_cards.length - 2])
-            else
-              @@pMine.push(past_cards.last)
+          if @@round != 11
+            maxindex = (@@firstOrlast.length-1)
+            eachround = 10
+            while eachround < maxindex
+              if @@firstOrlast[eachround] == 1
+                @my_card_history.push(past_cards[((eachround-10)*2)])
+                @rival_card_history.push(past_cards[((eachround-10)*2)+1])
+                eachround += 1
+              else
+                @my_card_history.push(past_cards[((eachround-10)*2) +1])
+                @rival_card_history.push(past_cards[((eachround-10)*2)])
+                eachround += 1
+              end
             end
           end
+          @rival_card_history.push(opposite_play_card)
         end
       end
     end
@@ -197,7 +220,12 @@ class MyAi
 
     ## 라운드가 10일떄는 상대방의 패와 나의 패 모두 알 수 있으므로 바로 저장
     if @@round == 10
-      @@pMine.push(left_card_list.last)
+      if @@roundoffset == 0
+        @@pRival = @@pRival + @rival_card_history
+        @@pMine =@@pMine +  @my_card_history
+        @@pMine.push(left_card_list.last)
+        @@roundoffset = 1
+      end
     end
 
     ##배팅에 대한 로직 설정
@@ -772,7 +800,6 @@ class MyAi
             #올인
           end
         elsif(my_money == 28)
-          #무조건 올인
         else ##my_money < 28  패배확실상황
           if(win_percent < 5)
             #다이
@@ -786,27 +813,6 @@ class MyAi
       elsif @@round == 10  ## @@round == 10
 
       else ## @@round == 20
-        if(my_money == 31)
-          if(win_percent > 95) ##무승부 혹은 승리일 경우
-            #콜
-          else #패배
-            #다이
-          end
-        elsif(my_money == 30)
-          # 무조건 올인
-        elsif(my_money == 29)
-          # if 무승부x 승리일 경우만
-            # 콜
-          # else 무승부 포함 패배일경우
-            # 올인
-          # end
-        else ## my_money < 29 패배 확실
-          if (win_percent > 95)
-            #무승부갯수 + 1개 배팅
-          else
-            #올인
-          end
-        end
 
       end
     end
@@ -814,7 +820,8 @@ class MyAi
 
     # Return values
     ## 나의 배팅수, 이길 확률, 남은 카드 리스트, 상대패 대비 내가 이길수 있는 남은 카드의 수, 현재 라운드
-    return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @@pRival, @@pMine, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory
+    return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @rival_card_history, @my_card_history, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory, @@firstOrlast, eachround, maxindex,
+    @@pMine, @@pRival
 
 
   end
