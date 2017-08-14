@@ -163,7 +163,7 @@ class MyAi
     ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
 
 
-
+    testinput = 0
 
 
     stability = ((current_round_coin_gap.to_f) / ((21 - @@round).to_f))
