@@ -479,8 +479,7 @@ class MyAi
             end
 
           elsif win_percent >= 50 && win_percent < 75   ##상대 카드가 2일때
-            maxbetting = 4
-
+            maxbetting = 3
             if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
               if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
                 this_bet = -1
@@ -502,9 +501,8 @@ class MyAi
               end
             end
 
-          elsif win_percent >= 28 && win_percent < 50   ##상대 카드가 2일때
+          elsif win_percent >= 20 && win_percent < 50   ##상대 카드가 2일때
             maxbetting = 2
-
             if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
               if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
                 this_bet = -1
@@ -518,32 +516,8 @@ class MyAi
               this_bet = 1
             end
 
-          elsif win_percent < 28   ##상대 카드가 2일때
-            maxbetting = 2
-
-            if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
-              if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
-                this_bet = -1
-              else    # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
-                temp1 = (your_total_bet - my_total_bet)
-                tmep2 = (maxbetting - my_total_bet)
-                this_bet = rand(temp1..temp2)
-              end
-
-            else # 시작 배팅
-              this_bet = 1
-            end
-
-          elsif opposite_play_card >= 8 #상대방 카드가 8이상이면 무조건 다이
+          elsif win_percent < 20   ##상대 카드가 2일때
             this_bet = -1
-
-          else # 상대방의 카드가 5,6,7일때 1개는 배팅해본다.
-            maxbetting = 2
-            if your_total_bet > my_total_bet # 상대방이 나의 배팅보다 더 많이 배팅 했을때
-              this_bet = -1
-            else # 시작 배팅
-              this_bet = 1
-            end
           end
 
         elsif (@@round == 3 || @@round == 4)
@@ -551,33 +525,6 @@ class MyAi
 
         elsif (@@round == 5 || @@round == 6)
 
-          if (gab_coin >= 26)                     ### 꼼시
-            if (win_percent > 98)                   # 무조건 이길 때의 베팅
-              if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
-                this_bet = your_total_bet - my_total_bet + 1  # 1개씩 올려가며 간을 봄
-              else  # 첫 베팅일 경우
-                this_bet = 1  # 기본 금액 + 1 개만 따도 안정도 2가 넘음
-              end
-            else
-              this_bet = -1   # 유리한 상황이므로 걍 다이
-            end
-
-          elsif (gab_coin >= 22)                  ### 안정도 2가 조금 안되는 상황
-            if (win_percent > 98)                     # 무조건 이길 떄의 베팅
-              if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
-                this_bet = your_total_bet - my_total_bet + 1  # 1개씩 올려가며 간을 봄
-              else  # 첫 베팅일 경우
-                this_bet = 2  # 기본 금액 + 2 개만 따도 안정도 2가 넘음
-              end
-            else
-              this_bet = -1   # 유리한 상황이므로 걍 다이
-            end
-
-
-          ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
-          #if
-
-          #end
         elsif (@@round == 7 || @@round == 8)
 
         elsif @@round == 9
@@ -807,36 +754,9 @@ class MyAi
             if your_total_bet > maxbetting # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
               this_bet = -1
             else # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
-              case your_total_bet
-              when 2 then
-                if randomNumForBetting < 25
-                  this_bet = maxbetting - my_total_bet - 3 # call : bet = 2
-                elsif randomNumForBetting < 50 && randomNumForBetting >= 25
-                  this_bet = maxbetting - my_total_bet - 2 # bet = 3
-                elsif randomNumForBetting < 75 && randomNumForBetting >= 50
-                  this_bet = maxbetting - my_total_bet - 1 # bet = 4
-                else
-                  this_bet = maxbetting - my_total_bet # bet = 5
-                end
-              when 3 then
-                if randomNumForBetting < 33
-                  this_bet = maxbetting - my_total_bet - 2 # call : bet = 3
-                elsif randomNumForBetting < 66 && randomNumForBetting >= 33
-                  this_bet = maxbetting - my_total_bet - 1 # bet = 4
-                else
-                  this_bet = maxbetting - my_total_bet # bet = 5
-                end
-              when 4 then
-                if randomNumForBetting < 55
-                  this_bet =  maxbetting - my_total_bet - 1 # call : bet = 4
-                else
-                  this_bet =  maxbetting - my_total_bet # bet = 5
-                end
-              when 5 then
-                this_bet =  maxbetting - my_total_bet # call : bet = 5
-              else
-                this_bet = -1 # die
-              end
+              temp1 = (your_total_bet - my_total_bet)
+              tmep2 = (maxbetting - my_total_bet)
+              this_bet = rand(temp1..temp2)
             end
 
           elsif opposite_play_card == 3 ##상대 카드가 3일때
@@ -844,26 +764,9 @@ class MyAi
             if your_total_bet > maxbetting # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
               this_bet = -1 # die
             else # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
-              case your_total_bet
-              when 2 then
-                if randomNumForBetting < 33
-                  this_bet = maxbetting - my_total_bet -2 # call : bet = 2
-                elsif randomNumForBetting < 66 && randomNumForBetting >= 33
-                  this_bet = maxbetting - my_total_bet -1 # bet = 3
-                else
-                  this_bet = maxbetting - my_total_bet # bet = 4
-                end
-              when 3 then
-                if randomNumForBetting < 50
-                  this_bet = maxbetting - my_total_bet -1 # call : bet = 3
-                else
-                  this_bet = maxbetting - my_total_bet # bet = 4
-                end
-              when 4 then
-                this_bet = maxbetting - my_total_bet # call : bet = 4
-              else
-                this_bet = -1 # die
-              end
+              temp1 = (your_total_bet - my_total_bet)
+              tmep2 = (maxbetting - my_total_bet)
+              this_bet = rand(temp1..temp2)
             end
 
           elsif opposite_play_card == 4
@@ -871,18 +774,9 @@ class MyAi
             if your_total_bet > maxbetting # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
               this_bet = -1 # die
             else # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
-              case your_total_bet
-              when 2 then
-                if randomNumForBetting < 50
-                  this_bet = maxbetting - my_total_bet - 1 # call : bet = 2
-                else
-                  this_bet = maxbetting - my_total_bet # bet = 3
-                end
-              when 3 then
-                  this_bet = maxbetting - my_total_bet # bet = 3
-              else
-                this_bet = -1 # die
-              end
+              temp1 = (your_total_bet - my_total_bet)
+              tmep2 = (maxbetting - my_total_bet)
+              this_bet = rand(temp1..temp2)
             end
 
           elsif opposite_play_card >= 8 #상대방 카드가 8이상이면 무조건 다이
@@ -901,6 +795,72 @@ class MyAi
         elsif @@round == 2
           ## 기초 로직
           randomNumForBetting = rand(1..100)
+          if win_percent >= 99              ##상대 카드가 1일때 = 무한
+            if your_total_bet > my_total_bet      # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if randomNumForBetting < 33         #랜덤 확률(33% 이하)
+                this_bet = your_total_bet - my_total_bet + 1    #상대방이 건 배팅 보다 무조건 1더 많게 건다. (무제한 배팅)
+              elsif randomNumForBetting < 66 && randomNumForBetting >= 33       #랜덤 확률(33% 이상 66% 미만)
+                this_bet = your_total_bet - my_total_bet + 2    #상대방이 건 배팅 보다 무조건 2더 많게 건다. (무제한 배팅)
+              else  #랜덤 확률(66% 이상 100% 미만)
+                this_bet = your_total_bet - my_total_bet + 3   #상대방이 건 배팅 보다 무조건 3더 많게 건다. (무제한 배팅)
+              end
+
+            else  # 내가 선공이므로 시작 배팅 (1,2,3 중 시작 배팅 랜덤 선택)
+              if randomNumForBetting < 33
+                this_bet = 1
+              elsif randomNumForBetting < 66 && randomNumForBetting >= 33
+                this_bet = 2
+              else
+                this_bet = 3
+              end
+            end
+
+
+          elsif win_percent >= 75 && win_percent < 99  ##상대 카드가 2일때
+            maxbetting = 4
+            if win_percent >= 94
+              maxbetting = 7
+            else (win_percent >= 85) && (win_percent < 94)
+              maxbetting = 6
+            end
+
+            if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
+                this_bet = -1
+              else    # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
+                temp1 = (your_total_bet - my_total_bet)
+                tmep2 = (maxbetting - my_total_bet)
+                this_bet = rand(temp1..temp2)
+              end
+            end
+
+          elsif win_percent >= 50 && win_percent < 75   ##상대 카드가 2일때
+            maxbetting = 3
+            if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
+                this_bet = -1
+              else    # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
+                temp1 = (your_total_bet - my_total_bet)
+                tmep2 = (maxbetting - my_total_bet)
+                this_bet = rand(temp1..temp2)
+              end
+            end
+
+          elsif win_percent >= 20 && win_percent < 50   ##상대 카드가 2일때
+            maxbetting = 2
+            if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
+                this_bet = -1
+              else    # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
+                temp1 = (your_total_bet - my_total_bet)
+                tmep2 = (maxbetting - my_total_bet)
+                this_bet = rand(temp1..temp2)
+              end
+            end
+
+          elsif win_percent < 20   ##상대 카드가 2일때
+            this_bet = -1
+          end
 
         elsif (@@round == 3 || @@round == 4)
           ## 기초 로직
