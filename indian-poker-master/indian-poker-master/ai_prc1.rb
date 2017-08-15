@@ -5,10 +5,10 @@ s = XMLRPC::Server.new(ARGV[0])
 MIN_DEFAULT_BET = 1
 
 class MyAi
-  @@pRival=[] # 지금까지의 상대의 패
-  @@pMine=[]  # 지금까지의 나의 패
-  @@pRBet=[]  # 지금까지의 상대의 베팅 기록
-  @@pMBet=[]  # 지금까지의 나의 베팅 기록
+  @@pRival=[] # 10라운드까지 저장
+  @@pMine=[]  # 10라운드까지 저장
+  @@pRBet = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  # 지금까지의 상대의 베팅 기록
+  @@pMBet = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   @@MyCoinHistory = []
   @@RivalCoinHistory = []
   @@firstOrlast = []
@@ -45,6 +45,7 @@ class MyAi
 
     # Write your own codes here
     #게임 시작
+    @rival_average_betting = 0
     @rival_card_history = []
     @my_card_history = []
     eachround = 0
@@ -58,16 +59,14 @@ class MyAi
           ## round가 1개 적게 카운트 된 정보를 먼저 입력
           @@MyCoinHistory.push(my_money)
           @@RivalCoinHistory.push(60-(my_money))
-          @@pRBet.push(1)
-          @@pMBet.push(1)
+          @@pRBet[(@@round-1)] = 1
+          @@pMBet[(@@round-1)] = 1
 
           ## 이후 round 를 정상화시켜 다시 입력
           @@round = @@round + 1
           @@firstOrlast.push(1)
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
-          @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
-          @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
 
           maxindex = (@@firstOrlast.length-1)
           while eachround < maxindex
@@ -93,10 +92,6 @@ class MyAi
 
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
-          if @@round != 1
-            @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
-            @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
-          end
 
           if @@round != 1 && @@round != 11
             maxindex = (@@firstOrlast.length-1)
@@ -122,16 +117,14 @@ class MyAi
           @@firstOrlast.push(0)
           @@MyCoinHistory.push(my_money)
           @@RivalCoinHistory.push(60-(my_money))
-          @@pRBet.push(1)
-          @@pMBet.push(1)
+          @@pRBet[(@@round-1)] = 1
+          @@pMBet[(@@round-1)] = 1
 
           ## 이후 round 를 정상화시켜 다시 입력
           @@round = @@round + 1
           @@firstOrlast.push(1)
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
-          @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
-          @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
 
           if @@round != 11
             maxindex = (@@firstOrlast.length-1)
@@ -159,10 +152,6 @@ class MyAi
           #기본 로직
           @@MyCoinHistory.push(my_money+1)
           @@RivalCoinHistory.push(60-(my_money+1))
-          if @@round != 1
-            @@pRBet.push((@@RivalCoinHistory[@@round-1] - @@RivalCoinHistory[@@round-2]).abs)
-            @@pMBet.push((@@MyCoinHistory[@@round-1] - @@MyCoinHistory[@@round-2]).abs)
-          end
 
           if @@round != 11
             maxindex = (@@firstOrlast.length-1)
@@ -184,6 +173,27 @@ class MyAi
       end
     end
 
+
+    if (@@RivalCoinHistory[(@@round-2)] - @@RivalCoinHistory[(@@round-1)]).abs == @@pRBet[@@round-2]
+      @@pRBet[(@@round-1)] = your_total_bet
+    else
+      if @@firstOrlast[(@@round-1)] == 1
+        if (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs == @@pRBet[@@round-2]
+          @@pRBet[(@@round-1)] = your_total_bet
+        else
+          @@pRBet[(@@round-2)] = (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs
+          @@pRBet[(@@round-1)] = your_total_bet
+        end
+
+      else
+        @@pRBet[(@@round-2)] = (@@RivalCoinHistory[(@@round-2)] - @@RivalCoinHistory[(@@round-1)]).abs
+        @@pRBet[(@@round-1)] = your_total_bet
+      end
+    end
+
+    if @@round != 1
+      @rival_average_betting = (@@pRBet.take((@@round-1)).inject(0){|sum,x| sum + x }) / (@@round-1)
+    end
 
 
     ## 남은 카드
@@ -212,11 +222,16 @@ class MyAi
     ## 확률 계산
     ### 상대방 패보다 내 패가 좋을 때 카드 개수(+ 안 좋을때 카드 개수)
     can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number >= opposite_play_card }
+    real_can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number > opposite_play_card }
+    can_draw_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number = opposite_play_card }
     can_lose_to_enemy_card_count = left_card_list.count - can_win_to_enemy_card_count
 
-    ### 상대방 패를 이길 혹률 (+ 질 확률)
+    ### 상대방 패를 이길 확률 (+ 질 확률)
     win_percent = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
+    real_win_percent = (real_can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
+    draw_percent = (can_draw_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
     lose_percent = 100.0 - win_percent
+    can_lose_percent = 100.0 - real_win_percent
 
     ## 라운드가 10일떄는 상대방의 패와 나의 패 모두 알 수 있으므로 바로 저장
     if @@round == 10
@@ -451,7 +466,7 @@ class MyAi
         elsif ((@@round == 2 || @@round == 3) || (@@round == 12 || @@round == 13))
           ## 기초 로직
           randomNumForBetting = rand(1..100)
-          if opposite_play_card == 1              ##상대 카드가 1일때 = 무한
+          if win_percent > 99              ##상대 카드가 1일때 = 무한
             if your_total_bet > my_total_bet      # 상대방이 나의 배팅보다 더 많이 배팅 했을때
               if randomNumForBetting < 33         #랜덤 확률(33% 이하)
                 this_bet = your_total_bet - my_total_bet + 1    #상대방이 건 배팅 보다 무조건 1더 많게 건다. (무제한 배팅)
@@ -636,14 +651,32 @@ class MyAi
 
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
-        elsif @@round == 10  ## @@round == 10
-          # if 무승부x 승리일 경우만
+        elsif(@@round == 10)  ## @@round == 10
+          if(real_win_percent > 98)
             # 3개 배팅 이후 상대방추가금액 +1씩
-          # elsif 무승부일경우
+            if(your_total_bet > my_total_bet)
+              if(your_total_bet - my_total_bet == my_money)
+                this_bet = my_money
+              else
+                this_bet = your_total_bet - my_total_bet +1
+              end
+            else
+              if(my_money < 3)
+                this_bet = my_money
+              else
+                this_bet = 3
+              end
+            end
+          elsif(draw_percent > 98)
+            if(your_total_bet > my_total_bet)
+              this_bet = your_total_bet - my_total_bet
+            else
+              this_bet = 1
+            end
             # 1개 배팅 이후 콜
-          # else 패배 카드일경우
-            # 다이
-          # end   #10라운드는 이게 끝
+          else(win_percent < 5)
+            this_bet = -1
+          end   #10라운드는 이게 끝
 
         else ## @@round == 20
           if(my_money + my_total_bet == 31)
@@ -662,11 +695,17 @@ class MyAi
             # 무조건 올인
             this_bet = my_money
           elsif(my_money + my_total_bet == 29)
-            # if 무승부x 승리일 경우만
+            if(real_win_percent>98)
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = 1
+              end
               # 1개 배팅 이후 콜
-            # else 무승부 포함 패배일경우
+            else  # 무승부 포함 패배일경우
+              this_bet = my_money
               # 올인
-            # end
+            end
           else ## my_money + my_total_bet < 29 패배 확실
               #무승부갯수 + 1개 배팅 이후 콜
             if(your_total_bet > my_total_bet)
@@ -680,6 +719,12 @@ class MyAi
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
         end
     end
+
+
+
+
+
+
 
     ### 후공일때
     #### 후공인때는 상대방이 배팅을 하게되면 총 배팅이 나의 배팅보다 항상 크다.
@@ -892,24 +937,24 @@ class MyAi
         if(my_money + my_total_bet == 32)
           if (win_percent > 99)
             #올인
-            this_bet = 60 - my_money -2
+            this_bet = 60 - (my_money -2)
           else
             this_bet = -1
           end
         elsif(my_money + my_total_bet == 31)
           if (win_percent > 99)
             #올인
-            this_bet = 60 - my_money -2
+            this_bet = 60 - (my_money -2)
           elsif(win_percent < 99 && win_percent > 65)
             #올인
-            this_bet = 60 - my_money -2
+            this_bet = 60 - (my_money -2)
           else
             this_bet = -1
           end
         elsif(my_money + my_total_bet == 30)
           if (win_percent > 99)
             #받고+1
-            if (your_total_bet = 30)
+            if (your_total_bet == 30)
               this_bet = your_total_bet - my_total_bet
             else
               this_bet = your_total_bet - my_total_bet + 1
@@ -951,14 +996,22 @@ class MyAi
 
         ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
-      elsif @@round == 10  ## @@round == 10
-        # if 무승부x 승리일 경우만
-          # 받고 +1 더
-        # elsif 무승부일경우
+      elsif(@@round == 10 ) ## @@round == 10
+        if(real_win_percent > 98)
+          # 받고 + 1
+          if(your_total_bet - my_total_bet == my_money )
+            this_bet = my_money
+          elsif (your_total_bet == 60 - my_money - my_total_bet)
+            this_bet = your_total_bet - my_total_bet
+          else
+            this_bet = your_total_bet - my_total_bet + 1
+          end
+        elsif(draw_percent > 98) #무승부
+          this_bet = your_total_bet - my_total_bet
           # 콜
-        # else 패배 카드일경우
-          # 다이
-        # end   #10라운드는 이게 끝
+        else(win_percent < 5)
+          this_bet = -1
+        end   #10라운드는 이게 끝
 
       else ## @@round == 20
         if(my_money + my_total_bet == 31)
@@ -973,11 +1026,14 @@ class MyAi
           # 무조건 올인
           this_bet = my_money
         elsif(my_money + my_total_bet == 29)
-          # if 무승부x 승리일 경우만
+          if(real_win_percent>98)
+            this_bet = your_total_bet - my_total_bet
             # 콜
-          # else 무승부 포함 패배일경우
+          else  # 무승부 포함 패배일경우
+            this_bet = my_money
             # 올인
-          # end
+          end
+
         else ## my_money + my_total_bet < 29 패배 확실
           if (win_percent > 95)
             this_bet = my_money
@@ -987,11 +1043,15 @@ class MyAi
       end
     end
 
-
+    if this_bet == -1
+      @@pMBet[@@round-1] = my_total_bet
+    else
+      @@pMBet[@@round-1] = my_total_bet + this_bet
+    end
     # Return values
     ## 나의 배팅수, 이길 확률, 남은 카드 리스트, 상대패 대비 내가 이길수 있는 남은 카드의 수, 현재 라운드
-    return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @rival_card_history, @my_card_history, @@pRBet, @@pMBet, @@MyCoinHistory, @@RivalCoinHistory, @@firstOrlast, eachround, maxindex,
-    @@pMine, @@pRival
+    return this_bet, win_percent, left_card_list, can_win_to_enemy_card_count, @@round, @rival_card_history, @my_card_history, @@pRBet,  @@pMBet, @@MyCoinHistory, @@RivalCoinHistory, @@firstOrlast, eachround, maxindex,
+    @@pMine, @@pRival, @rival_average_betting
 
 
   end
