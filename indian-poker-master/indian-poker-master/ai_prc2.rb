@@ -704,12 +704,12 @@ class MyAi
               end
             when 4 then
               if randomNumForBetting < 55
-                this_bet = 3 # call : bet = 4
+                this_bet =  maxbetting - my_total_bet - 1 # call : bet = 4
               else
-                this_bet = 4 # bet = 5
+                this_bet =  maxbetting - my_total_bet # bet = 5
               end
             when 5 then
-              this_bet = 4 # call : bet = 5
+              this_bet =  maxbetting - my_total_bet # call : bet = 5
             else
               this_bet = -1 # die
             end
@@ -723,11 +723,11 @@ class MyAi
             case your_total_bet
             when 2 then
               if randomNumForBetting < 33
-                this_bet = 1 # call : bet = 2
+                this_bet = maxbetting - my_total_bet - 2 # call : bet = 2
               elsif randomNumForBetting < 66 && randomNumForBetting >= 33
-                this_bet = 2 # bet = 3
+                this_bet = maxbetting - my_total_bet - 1 # bet = 3
               else
-                this_bet = 3 # bet = 4
+                this_bet = maxbetting - my_total_bet # bet = 4
               end
             when 3 then
               if randomNumForBetting < 50
