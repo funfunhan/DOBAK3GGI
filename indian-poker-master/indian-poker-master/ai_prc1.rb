@@ -857,15 +857,17 @@ class MyAi
         if(my_money == 31)
           if (win_percent > 99)
             #올인
-            this_bet =
+            this_bet = my_money
           else
             this_bet = -1
           end
         elsif(my_money == 30)
           if (win_percent > 99)
             #올인
+            this_bet = my_money
           elsif(win_percent < 99 && win_percent > 65)
             #올인
+            this_bet = my_money
           else
             this_bet = -1
           end
@@ -874,6 +876,7 @@ class MyAi
             #받고+1
           elsif(win_percent < 99 && win_percent > 65)
             #올인
+            this_bet = my_money
           else
             this_bet = -1
           end
@@ -894,6 +897,7 @@ class MyAi
           else
             this_bet = my_money
             #올인
+            this_bet = my_money
           end
         elsif(my_money == 27)
 
