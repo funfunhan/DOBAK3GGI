@@ -971,6 +971,43 @@ class MyAi
         #end
 
       elsif (@@round == 9)
+        if (win_percent > 98)
+          if(your_total_bet - my_total_bet == my_money)
+            this_bet = my_money
+          elsif (your_total_bet == 60 - my_money - my_total_bet)
+            this_bet = your_total_bet - my_total_bet
+          else
+            this_bet = your_total_bet - my_total_bet +1
+          end
+          # 상대방 추가금액 +1씩
+        elsif(win_percent < 98 && win_percent > 65)
+          if(maxbetting > your_total_bet)
+            this_bet = maxbetting - my_total_bet
+          else
+            this_bet = -1
+          end
+            # 맥스베팅 까지 콜
+        else
+          #다이
+          this_bet = -1
+        end
+
+      elsif(@@round == 10 ) ## @@round == 10
+        if(real_win_percent > 98)
+          # 받고 + 1
+          if(your_total_bet - my_total_bet == my_money )
+            this_bet = my_money
+          elsif (your_total_bet == 60 - my_money - my_total_bet)
+            this_bet = your_total_bet - my_total_bet
+          else
+            this_bet = your_total_bet - my_total_bet + 1
+          end
+        elsif(draw_percent > 98) #무승부
+          this_bet = your_total_bet - my_total_bet
+          # 콜
+        else(win_percent < 5)
+          this_bet = -1
+        end   #10라운드는 이게 끝
 
       elsif (@@round == 19)
         if(my_money + my_total_bet == 32)
@@ -1034,24 +1071,6 @@ class MyAi
         end
 
         ## 9, 19라운드는 특별한 상황에 대한 로직 설정
-
-      elsif(@@round == 10 ) ## @@round == 10
-        if(real_win_percent > 98)
-          # 받고 + 1
-          if(your_total_bet - my_total_bet == my_money )
-            this_bet = my_money
-          elsif (your_total_bet == 60 - my_money - my_total_bet)
-            this_bet = your_total_bet - my_total_bet
-          else
-            this_bet = your_total_bet - my_total_bet + 1
-          end
-        elsif(draw_percent > 98) #무승부
-          this_bet = your_total_bet - my_total_bet
-          # 콜
-        else(win_percent < 5)
-          this_bet = -1
-        end   #10라운드는 이게 끝
-
       else ## @@round == 20
         if(my_money + my_total_bet == 31)
           if(win_percent > 95) ##무승부 혹은 승리일 경우
