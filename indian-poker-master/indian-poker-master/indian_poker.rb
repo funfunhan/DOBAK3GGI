@@ -332,55 +332,14 @@ class IndianPoker < Gosu::Window
       [0, 1].each {|x| @players[x].hide = false }
     else
       if @play_turn.ai_flag
-        bet_money, win_percant, left_card_list, can_win_to_enemy_card_count, round, pRival, pMine, pRBet, pMBet, myCoinHistory, rivalCoinHistory, firstOrlast, eachround, maxindex, test1, test2, average=
+        bet_money=
           @servers[@play_turn.number].call(
                   "indian.calculate",
                   [@play_next.card_number] + [@past_deck] + [@play_turn.money] + [@bet_money_history]
                 )
         #Log
-        ai_name = @servers[@play_turn.number].call("indian.get_name")
-        puts "\n\n--------------- ROUND : " + round.to_s + "---------------"
-        print "현재 AI 이름 : "
-        puts ai_name
-        puts "이전 판까지의 사용된 카드"
-        print @past_deck
-        puts "\n상대방 카드"
-        puts @play_next.card_number
-        puts "상대방 카드 + 남은 카드를 통한 이길 확률"
-        puts win_percant
-        puts "남은 카드수 (지금까지 카드 + 상대방 카드)"
-        print left_card_list
-        puts "\n남은 카드중 상대방 카드를 이길 수 있는 카드 수"
-        puts can_win_to_enemy_card_count
-        print "\n선공 기록 : "
-        print firstOrlast
-        print "\ntest : "
-        print eachround
-        print "\ntest2 : "
-        print eachround
-        print "\n상대방의 패 기록 : "
-        print pRival
-        print "\n나의 패 기록("+ai_name+") : 10라운드"
-        print test1
-        print "\n상대방 배팅 기록 : 10라운드"
-        print test2
-        print "\n나의 패 기록("+ai_name+") : "
-        print pMine
-        print "\n나의 배팅 기록 : "
-        print pMBet
-        print "\n상대방 배팅 기록 : "
-        print pRBet
-        print "\n상대방 배팅 평균 : "
-        print average
-        print "\n상대방 가진 코인 기록 : "
-        print rivalCoinHistory
-        print "\n나의 가진 코인 기록("+ai_name+") : "
-        print myCoinHistory
-        puts  "\n\n이번 라운드 배팅 기록"
-        print @bet_money_history
-        puts "\n나의 배팅 머니("+ai_name+")"
-        puts bet_money.to_i
-        # puts message
+        puts "\n\n--------------- START---------------"
+
         puts "-----------------------------------------------\n\n"
       else
         bet_money = @current_bet_money
