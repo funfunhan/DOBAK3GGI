@@ -332,7 +332,7 @@ class IndianPoker < Gosu::Window
       [0, 1].each {|x| @players[x].hide = false }
     else
       if @play_turn.ai_flag
-        bet_money, win_percant, left_card_list, can_win_to_enemy_card_count, round, pRival, pMine, pRBet, pMBet, myCoinHistory, rivalCoinHistory, firstOrlast, eachround, maxindex, test1, test2=
+        bet_money, win_percant, left_card_list, can_win_to_enemy_card_count, round, pRival, pMine, pRBet, pMBet, myCoinHistory, rivalCoinHistory, firstOrlast, eachround, maxindex, test1, test2, average=
           @servers[@play_turn.number].call(
                   "indian.calculate",
                   [@play_next.card_number] + [@past_deck] + [@play_turn.money] + [@bet_money_history]
@@ -366,10 +366,12 @@ class IndianPoker < Gosu::Window
         print test2
         print "\n나의 패 기록("+ai_name+") : "
         print pMine
+        print "\n나의 배팅 기록 : "
+        print pMBet
         print "\n상대방 배팅 기록 : "
         print pRBet
-        print "\n나의 배팅 기록("+ai_name+") : "
-        print pMBet
+        print "\n상대방 배팅 평균 : "
+        print average
         print "\n상대방 가진 코인 기록 : "
         print rivalCoinHistory
         print "\n나의 가진 코인 기록("+ai_name+") : "
