@@ -167,12 +167,21 @@ class MyAi
         if (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs == @@pRBet[@@round-2]
           @@pRBet[(@@round-1)] = your_total_bet
         else
-          @@pRBet[(@@round-2)] = (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs
-          @@pRBet[(@@round-1)] = your_total_bet
+          if (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs != 0
+            @@pRBet[(@@round-2)] = (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs
+            @@pRBet[(@@round-1)] = your_total_bet
+          end
         end
       else
-        @@pRBet[(@@round-2)] = (@@RivalCoinHistory[(@@round-2)] - @@RivalCoinHistory[(@@round-1)]).abs
-        @@pRBet[(@@round-1)] = your_total_bet
+        if @@pRBet[(@@round-1)] > @@pMBet[(@@round-1)]
+          @@pRBet[(@@round-1)] = your_total_bet
+        else
+          if (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs != 0
+            @@pRBet[(@@round-2)] = (@@MyCoinHistory[(@@round-2)] - @@MyCoinHistory[(@@round-1)]).abs
+            @@pRBet[(@@round-1)] = your_total_bet
+          end
+        end
+
       end
     end
 
@@ -741,8 +750,132 @@ class MyAi
          end
 
         elsif @@round == 11
+          randomNumForBetting = rand(1..100)
+          if opposite_play_card == 1              ##상대 카드가 1일때 = 무한
+            if your_total_bet > my_total_bet      # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if randomNumForBetting < 33         #랜덤 확률(33% 이하)
+                this_bet = your_total_bet - my_total_bet + 1    #상대방이 건 배팅 보다 무조건 1더 많게 건다. (무제한 배팅)
+              elsif randomNumForBetting < 66 && randomNumForBetting >= 33       #랜덤 확률(33% 이상 66% 미만)
+                this_bet = your_total_bet - my_total_bet + 2    #상대방이 건 배팅 보다 무조건 2더 많게 건다. (무제한 배팅)
+              else  #랜덤 확률(66% 이상 100% 미만)
+                this_bet = your_total_bet - my_total_bet + 3   #상대방이 건 배팅 보다 무조건 3더 많게 건다. (무제한 배팅)
+              end
+
+            else  # 내가 선공이므로 시작 배팅 (1,2,3 중 시작 배팅 랜덤 선택)
+              if randomNumForBetting < 33
+                this_bet = 1
+              elsif randomNumForBetting < 66 && randomNumForBetting >= 33
+                this_bet = 2
+              else
+                this_bet = 3
+              end
+            end
+
+
+          elsif opposite_play_card == 2    ##상대 카드가 2일때
+            maxbetting = 5 + @rival_average_betting
+            if your_total_bet > my_total_bet  # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if your_total_bet > maxbetting  # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
+                this_bet = -1
+              else    # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
+                temp1 = (your_total_bet - my_total_bet)
+                temp2 = (maxbetting - my_total_bet)
+                this_bet = rand(temp1..temp2)
+              end
+
+            else # 시작 배팅
+              if my_total_bet == 1
+                if randomNumForBetting < 25
+                  this_bet = 1 # bet = 2
+                elsif randomNumForBetting < 50 && randomNumForBetting >= 25
+                  this_bet = 2 # bet = 3
+                elsif randomNumForBetting < 75 && randomNumForBetting >= 50
+                  this_bet = 3 # bet = 4
+                else
+                  this_bet = 4 # bet = 5
+                end
+              end
+            end
+
+          elsif opposite_play_card == 3 ##상대 카드가 3일때
+            maxbetting = 4 + @rival_average_betting
+            if your_total_bet > my_total_bet # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if your_total_bet > maxbetting # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
+                this_bet = -1 # die
+              else # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
+                temp1 = (your_total_bet - my_total_bet)
+                temp2 = (maxbetting - my_total_bet)
+                this_bet = rand(temp1..temp2)
+              end
+            else # 시작 배팅
+              if my_total_bet == 1
+                if randomNumForBetting < 33
+                  this_bet = 1 # bet = 2
+                elsif randomNumForBetting < 66 && randomNumForBetting >= 33
+                  this_bet = 2 # bet = 3
+                else
+                  this_bet = 3 # bet = 4
+                end
+              end
+            end
+
+
+          elsif opposite_play_card == 4
+            maxbetting = 3 + @rival_average_betting
+            if your_total_bet > my_total_bet # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if your_total_bet > maxbetting # 상대방의 총배팅이 최대 배팅보다 클때 = 다이
+                this_bet = -1 # die
+              else # 상대방의 총 배팅이 최대 배팅보다 낮을 경우 최대까지 남은 배팅을 한다.
+                temp1 = (your_total_bet - my_total_bet)
+                temp2 = (maxbetting - my_total_bet)
+                this_bet = rand(temp1..temp2)
+              end
+            else # 시작 배팅
+              if my_total_bet == 1
+                if randomNumForBetting < 50
+                  this_bet = 1 # bet = 2
+                else
+                  this_bet = 2 # bet = 3
+                end
+              end
+            end
+
+          elsif opposite_play_card >= 8 #상대방 카드가 8이상이면 무조건 다이
+            this_bet = -1
+
+          else # 상대방의 카드가 5,6,7일때 1개는 배팅해본다.
+            maxbetting = 2
+            if your_total_bet > my_total_bet # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              this_bet = -1
+            else # 시작 배팅
+              this_bet = 1
+            end
+          end
 
         elsif @@round == 12
+          if win_percent == 100              ##상대 카드가 1일때 = 무한
+            if your_total_bet > my_total_bet      # 상대방이 나의 배팅보다 더 많이 배팅 했을때
+              if randomNumForBetting < 33         #랜덤 확률(33% 이하)
+                this_bet = your_total_bet - my_total_bet + 1    #상대방이 건 배팅 보다 무조건 1더 많게 건다. (무제한 배팅)
+              elsif randomNumForBetting < 66 && randomNumForBetting >= 33       #랜덤 확률(33% 이상 66% 미만)
+                this_bet = your_total_bet - my_total_bet + 2    #상대방이 건 배팅 보다 무조건 2더 많게 건다. (무제한 배팅)
+              else  #랜덤 확률(66% 이상 100% 미만)
+                this_bet = your_total_bet - my_total_bet + 3   #상대방이 건 배팅 보다 무조건 3더 많게 건다. (무제한 배팅)
+              end
+
+            else  # 내가 선공이므로 시작 배팅 (1,2,3 중 시작 배팅 랜덤 선택)
+              if randomNumForBetting < 33
+                this_bet = 1
+              elsif randomNumForBetting < 66 && randomNumForBetting >= 33
+                this_bet = 2
+              else
+                this_bet = 3
+              end
+            end
+          else
+          end
+
+
 
         elsif @@round == 13
 
@@ -1210,7 +1343,7 @@ class MyAi
       end
     end
 
-    if this_bet <= -1
+    if this_bet == -1
       @@pMBet[@@round-1] = my_total_bet
     else
       @@pMBet[@@round-1] = my_total_bet + this_bet
