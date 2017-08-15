@@ -717,6 +717,36 @@ class MyAi
 
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
+<<<<<<< HEAD
+        elsif(@@round == 10)  ## @@round == 10
+          if(real_win_percent > 98)
+            # 3개 배팅 이후 상대방추가금액 +1씩
+            if(your_total_bet > my_total_bet)
+              if(your_total_bet - my_total_bet == my_money)
+                this_bet = my_money
+              else
+                this_bet = your_total_bet - my_total_bet +1
+              end
+            else
+              if(my_money < 3)
+                this_bet = my_money
+              else
+                this_bet = 3
+              end
+            end
+          elsif(draw_percent > 98)
+            if(your_total_bet > my_total_bet)
+              this_bet = your_total_bet - my_total_bet
+            else
+              this_bet = 1
+            end
+            # 1개 배팅 이후 콜
+          else(win_percent < 5)
+            this_bet = -1
+          end   #10라운드는 이게 끝
+
+=======
+>>>>>>> 487183450741abdd1be877dd98eb1549bc880184
         else ## @@round == 20
           if(my_money + my_total_bet == 31)
             if(win_percent > 95) ##무승부 혹은 승리일 경우
@@ -1013,17 +1043,28 @@ class MyAi
         if(my_money + my_total_bet == 32)
           if (win_percent > 99)
             #올인
+<<<<<<< HEAD
+            this_bet = 60 - (my_money -2)
+=======
             this_bet = 58 - my_money
+>>>>>>> 487183450741abdd1be877dd98eb1549bc880184
           else
             this_bet = -1
           end
         elsif(my_money + my_total_bet == 31)
           if (win_percent > 99)
             #올인
+<<<<<<< HEAD
+            this_bet = 60 - (my_money -2)
+          elsif(win_percent < 99 && win_percent > 65)
+            #올인
+            this_bet = 60 - (my_money -2)
+=======
             this_bet = 58 - my_money
           elsif(win_percent < 99 && win_percent > 65)
             #올인
             this_bet = 58 - my_money
+>>>>>>> 487183450741abdd1be877dd98eb1549bc880184
           else
             this_bet = -1
           end

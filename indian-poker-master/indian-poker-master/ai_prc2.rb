@@ -704,12 +704,12 @@ class MyAi
               end
             when 4 then
               if randomNumForBetting < 55
-                this_bet = 3 # call : bet = 4
+                this_bet =  maxbetting - my_total_bet - 1 # call : bet = 4
               else
-                this_bet = 4 # bet = 5
+                this_bet =  maxbetting - my_total_bet # bet = 5
               end
             when 5 then
-              this_bet = 4 # call : bet = 5
+              this_bet =  maxbetting - my_total_bet # call : bet = 5
             else
               this_bet = -1 # die
             end
