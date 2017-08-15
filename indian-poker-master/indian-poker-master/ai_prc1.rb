@@ -526,6 +526,30 @@ class MyAi
           ## 기초 로직
 
         elsif (@@round == 5 || @@round == 6)
+
+          if (gab_coin >= 26)                     ### 꼼시
+            if (win_percent > 98)                   # 무조건 이길 때의 베팅
+              if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
+                this_bet = your_total_bet - my_total_bet + 1  # 1개씩 올려가며 간을 봄
+              else  # 첫 베팅일 경우
+                this_bet = 1  # 기본 금액 + 1 개만 따도 안정도 2가 넘음
+              end
+            else
+              this_bet = -1   # 유리한 상황이므로 걍 다이
+            end
+
+          elsif (gab_coin >= 22)                  ### 안정도 2가 조금 안되는 상황
+            if (win_percent > 98)                     # 무조건 이길 떄의 베팅
+              if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
+                this_bet = your_total_bet - my_total_bet + 1  # 1개씩 올려가며 간을 봄
+              else  # 첫 베팅일 경우
+                this_bet = 2  # 기본 금액 + 2 개만 따도 안정도 2가 넘음
+              end
+            else
+              this_bet = -1   # 유리한 상황이므로 걍 다이
+            end
+
+
           ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
           #if
 
@@ -534,7 +558,7 @@ class MyAi
 
         elsif @@round == 9
           if (win_percent > 98)
-            if(your_total_bet > my_total_bet)
+            if(your_total_bet > my_total_bet)     #상대가 레이즈를 했을 떄
               if(your_total_bet - my_total_bet == my_money)
                 this_bet = my_money
               elsif (your_total_bet == 60 - my_money - my_total_bet)
@@ -542,6 +566,7 @@ class MyAi
               else
                 this_bet = your_total_bet - my_total_bet +1
               end
+
             else
               if(my_money < 3)
                 this_bet = my_money
