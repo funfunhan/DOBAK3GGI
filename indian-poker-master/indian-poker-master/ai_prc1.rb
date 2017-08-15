@@ -559,6 +559,72 @@ class MyAi
           #end
 
         elsif (@@round == 9)
+          if (win_percent > 98)
+            if(your_total_bet > my_total_bet)
+              if(your_total_bet - my_total_bet == my_money)
+                this_bet = my_money
+              elsif (your_total_bet == 60 - my_money - my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = your_total_bet - my_total_bet +1
+              end
+            else
+              if(my_money < 3)
+                this_bet = my_money
+              else
+                this_bet = 3
+              end
+            end
+            # 3개 배팅 이후 상대방 추가금액 +1씩
+          elsif(win_percent < 98 && win_percent > 65)
+              if(your_total_bet > my_total_bet)
+                if(maxbetting > your_total_bet)
+                  this_bet = your_total_bet - my_total_bet
+                else
+                  this_bet = -1
+                end
+              else
+                if(my_money < 2)
+                  this_bet = my_money
+                else
+                  this_bet = 2
+                end
+              end
+              # 2개 배팅 이후 맥스베팅 까지 콜
+          else
+            #다이
+            this_bet = -1
+          end
+
+        elsif(@@round == 10)  ## @@round == 10
+          if(real_win_percent > 98)
+            # 3개 배팅 이후 상대방추가금액 +1씩
+            if(your_total_bet > my_total_bet)
+              if(your_total_bet - my_total_bet == my_money)
+                this_bet = my_money
+              elsif (your_total_bet == 60 - my_money - my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = your_total_bet - my_total_bet +1
+              end
+            else
+              if(my_money < 3)
+                this_bet = my_money
+              else
+                this_bet = 3
+              end
+            end
+          elsif(draw_percent > 98)
+            if(your_total_bet > my_total_bet)
+              this_bet = your_total_bet - my_total_bet
+            else
+              this_bet = 1
+            end
+            # 1개 배팅 이후 콜
+          else(win_percent < 5)
+            this_bet = -1
+          end   #10라운드는 이게 끝
+
         elsif (@@round == 19)
           if(my_money + my_total_bet == 32)
             if (win_percent > 98)
@@ -640,33 +706,6 @@ class MyAi
           end
 
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
-
-        elsif(@@round == 10)  ## @@round == 10
-          if(real_win_percent > 98)
-            # 3개 배팅 이후 상대방추가금액 +1씩
-            if(your_total_bet > my_total_bet)
-              if(your_total_bet - my_total_bet == my_money)
-                this_bet = my_money
-              else
-                this_bet = your_total_bet - my_total_bet +1
-              end
-            else
-              if(my_money < 3)
-                this_bet = my_money
-              else
-                this_bet = 3
-              end
-            end
-          elsif(draw_percent > 98)
-            if(your_total_bet > my_total_bet)
-              this_bet = your_total_bet - my_total_bet
-            else
-              this_bet = 1
-            end
-            # 1개 배팅 이후 콜
-          else(win_percent < 5)
-            this_bet = -1
-          end   #10라운드는 이게 끝
 
         else ## @@round == 20
           if(my_money + my_total_bet == 31)
