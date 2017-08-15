@@ -715,6 +715,7 @@ class MyAi
             else
               this_bet = this_bet = 30 - my_money
             end
+          end
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
         end
     end
@@ -936,17 +937,17 @@ class MyAi
         if(my_money + my_total_bet == 32)
           if (win_percent > 99)
             #올인
-            this_bet = 60 - my_money -2
+            this_bet = 60 - (my_money -2)
           else
             this_bet = -1
           end
         elsif(my_money + my_total_bet == 31)
           if (win_percent > 99)
             #올인
-            this_bet = 60 - my_money -2
+            this_bet = 60 - (my_money -2)
           elsif(win_percent < 99 && win_percent > 65)
             #올인
-            this_bet = 60 - my_money -2
+            this_bet = 60 - (my_money -2)
           else
             this_bet = -1
           end
