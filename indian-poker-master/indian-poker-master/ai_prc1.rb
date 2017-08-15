@@ -525,8 +525,6 @@ class MyAi
 
         elsif (@@round == 5 || @@round == 6)
 
-<<<<<<< HEAD
-=======
           if (gab_coin >= 24)                     ### 꼼시
             if (win_percent > 98)                   # 무조건 이길 때의 베팅
               if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
@@ -579,7 +577,6 @@ class MyAi
           #if
 
           #end
->>>>>>> b03e5e17843a08055f9bfccff4c3f6148899b81d
         elsif (@@round == 7 || @@round == 8)
 
         elsif @@round == 9
