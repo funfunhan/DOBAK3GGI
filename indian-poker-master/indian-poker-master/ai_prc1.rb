@@ -222,11 +222,16 @@ class MyAi
     ## 확률 계산
     ### 상대방 패보다 내 패가 좋을 때 카드 개수(+ 안 좋을때 카드 개수)
     can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number >= opposite_play_card }
+    real_can_win_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number > opposite_play_card }
+    can_draw_to_enemy_card_count = left_card_list.count { |left_each_card_number| left_each_card_number = opposite_play_card }
     can_lose_to_enemy_card_count = left_card_list.count - can_win_to_enemy_card_count
 
-    ### 상대방 패를 이길 혹률 (+ 질 확률)
+    ### 상대방 패를 이길 확률 (+ 질 확률)
     win_percent = (can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
+    real_win_percent = (real_can_win_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
+    draw_percent = (can_draw_to_enemy_card_count.to_f / left_card_list.count.to_f) * 100.0
     lose_percent = 100.0 - win_percent
+    can_lose_percent = 100.0 - real_win_percent
 
     ## 라운드가 10일떄는 상대방의 패와 나의 패 모두 알 수 있으므로 바로 저장
     if @@round == 10
@@ -565,94 +570,152 @@ class MyAi
 
         elsif (@@round == 9)
         elsif (@@round == 19)
-          if(my_money == 31)
-            if (win_percent > 99)
+          if(my_money + my_total_bet == 32)
+            if (win_percent > 98)
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = 1
+              end
               #1개배팅 이후 콜
             else
               #다이
               this_bet = -1
             end
-          elsif(my_money == 30)
-            if (win_percent > 99)
+          elsif(my_money + my_total_bet == 31)
+            if (win_percent > 98)
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = 1
+              end
               #1개배팅 이후 콜
-            elsif(win_percent < 99 && win_percent > 65)
+            elsif(win_percent < 98 && win_percent > 65)
               #올인
               this_bet = 60 - my_money -2
             else
               #다이
               this_bet = -1
             end
-          elsif(my_money == 29)
-            if (win_percent > 99)
+          elsif(my_money + my_total_bet == 30)
+            if (win_percent > 98)
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = 1
+              end
               # 1개배팅 이후 콜
-            elsif(win_percent < 99 && win_percent > 65)
+            elsif(win_percent < 98 && win_percent > 65)
               #올인
               this_bet = my_money
             else
               #다이
               this_bet = -1
             end
-          elsif(my_money == 28)
+          elsif(my_money + my_total_bet == 29)
             if (win_percent > 99)
               # 2개배팅 이후 콜
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = 2
+              end
             elsif(win_percent < 99 && win_percent > 65)
               # 2개배팅 이후 올인
+              if(your_total_bet > my_total_bet)
+                this_bet = my_money
+              else
+                this_bet = 2
+              end
             else
               #올인
               this_bet = my_money
             end
-          elsif(my_money == 27)
+          elsif(my_money + my_total_bet == 28)
             #무조건 올인
             this_bet = my_money
-          else ##my_money < 27  패배확실상황
+          else ##my_money + my_total_bet < 28  패배확실상황
             if(win_percent < 5)
               this_bet = -1
             else
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              elsif(my_money < 15)
+                this_bet = my_money
+              else
+                this_bet = 30 - my_money
+              end
               #무승부 + 1개 배팅
             end
           end
 
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
-        elsif @@round == 10  ## @@round == 10
-          # if 무승부x 승리일 경우만
+        elsif(@@round == 10)  ## @@round == 10
+          if(real_win_percent > 98)
             # 3개 배팅 이후 상대방추가금액 +1씩
-          # elsif 무승부일경우
+            if(your_total_bet > my_total_bet)
+              if(your_total_bet - my_total_bet == my_money)
+                this_bet = my_money
+              else
+                this_bet = your_total_bet - my_total_bet +1
+              end
+            else
+              if(my_money < 3)
+                this_bet = my_money
+              else
+                this_bet = 3
+              end
+            end
+          elsif(draw_percent > 98)
+            if(your_total_bet > my_total_bet)
+              this_bet = your_total_bet - my_total_bet
+            else
+              this_bet = 1
+            end
             # 1개 배팅 이후 콜
-          # else 패배 카드일경우
-            # 다이
-          # end   #10라운드는 이게 끝
+          else(win_percent < 5)
+            this_bet = -1
+          end   #10라운드는 이게 끝
 
         else ## @@round == 20
-          if(my_money == 30)
+          if(my_money + my_total_bet == 31)
             if(win_percent > 95) ##무승부 혹은 승리일 경우
               #1개 배팅 이후 콜
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
+              else
+                this_bet = 1
+              end
             else #패배
               #다이
               this_bet = -1
             end
-          elsif(my_money == 29)
+          elsif(my_money + my_total_bet == 30)
             # 무조건 올인
             this_bet = my_money
-          elsif(my_money == 28)
-            # if 무승부x 승리일 경우만
-              # 1개 배팅 이후 콜
-            # else 무승부 포함 패배일경우
-              # 올인
-            # end
-          else ## my_money < 28 패배 확실
-            if (win_percent > 95)
-              #무승부갯수 + 1개 배팅 이후 콜
-            else
-              #3
-              if(my_money > 3)
-                this_bet = 3
+          elsif(my_money + my_total_bet == 29)
+            if(real_win_percent>98)
+              if(your_total_bet > my_total_bet)
+                this_bet = your_total_bet - my_total_bet
               else
-                this_bet = my_money
+                this_bet = 1
               end
+              # 1개 배팅 이후 콜
+            else  # 무승부 포함 패배일경우
+              this_bet = my_money
+              # 올인
+            end
+          else ## my_money + my_total_bet < 29 패배 확실
+              #무승부갯수 + 1개 배팅 이후 콜
+            if(your_total_bet > my_total_bet)
+              this_bet = your_total_bet - my_total_bet
+            elsif(my_money<15)
+              this_bet = my_money
+            else
+              this_bet = this_bet = 30 - my_money
             end
           ## 9, 19라운드는 특별한 상황에 대한 로직 설정
-          end
         end
     end
 
@@ -870,39 +933,45 @@ class MyAi
       elsif (@@round == 9)
 
       elsif (@@round == 19)
-        if(my_money == 31)
+        if(my_money + my_total_bet == 32)
           if (win_percent > 99)
             #올인
-            this_bet = my_money
+            this_bet = 60 - my_money -2
           else
             this_bet = -1
           end
-        elsif(my_money == 30)
+        elsif(my_money + my_total_bet == 31)
           if (win_percent > 99)
             #올인
-            this_bet = my_money
+            this_bet = 60 - my_money -2
           elsif(win_percent < 99 && win_percent > 65)
             #올인
-            this_bet = my_money
+            this_bet = 60 - my_money -2
           else
             this_bet = -1
           end
-        elsif(my_money == 29)
+        elsif(my_money + my_total_bet == 30)
           if (win_percent > 99)
             #받고+1
+            if (your_total_bet == 30)
+              this_bet = your_total_bet - my_total_bet
+            else
+              this_bet = your_total_bet - my_total_bet + 1
+            end
           elsif(win_percent < 99 && win_percent > 65)
             #올인
             this_bet = my_money
           else
             this_bet = -1
           end
-        elsif(my_money == 28)
+        elsif(my_money + my_total_bet == 29)
           if (win_percent > 99)
             if your_total_bet - my_total_bet == my_money
               this_bet = my_money
             else
               this_bet = your_total_bet - my_total_bet + 1
             end
+            #받고 +1
           elsif(win_percent < 99 && win_percent > 65)
             if your_total_bet - my_total_bet == my_money
               this_bet = my_money
@@ -911,37 +980,40 @@ class MyAi
             end
             #받고+1
           else
-            this_bet = my_money
             #올인
             this_bet = my_money
           end
-        elsif(my_money == 27)
-
-        else ##my_money < 27  패배확실상황
+        elsif(my_money + my_total_bet == 28)
+          this_bet = my_money
+        else ##my_money + my_total_bet < 28  패배확실상황
           if(win_percent < 5)
             this_bet = -1
           else
-            if your_total_bet - my_total_bet == my_money
-              this_bet = my_money
-            else
-              this_bet = your_total_bet - my_total_bet + 2 #받고 2개더
-            end
+            this_bet = my_money
           end
         end
 
         ## 9, 19라운드는 특별한 상황에 대한 로직 설정
 
-      elsif @@round == 10  ## @@round == 10
-        # if 무승부x 승리일 경우만
-          # 받고 +1 더
-        # elsif 무승부일경우
+      elsif(@@round == 10 ) ## @@round == 10
+        if(real_win_percent > 98)
+          # 받고 + 1
+          if(your_total_bet - my_total_bet == my_money )
+            this_bet = my_money
+          elsif (your_total_bet == 60 - my_money - my_total_bet)
+            this_bet = your_total_bet - my_total_bet
+          else
+            this_bet = your_total_bet - my_total_bet + 1
+          end
+        elsif(draw_percent > 98) #무승부
+          this_bet = your_total_bet - my_total_bet
           # 콜
-        # else 패배 카드일경우
-          # 다이
-        # end   #10라운드는 이게 끝
+        else(win_percent < 5)
+          this_bet = -1
+        end   #10라운드는 이게 끝
 
       else ## @@round == 20
-        if(my_money == 30)
+        if(my_money + my_total_bet == 31)
           if(win_percent > 95) ##무승부 혹은 승리일 경우
             # 콜
             this_bet = your_total_bet - my_total_bet
@@ -949,21 +1021,21 @@ class MyAi
             #다이
             this_bet = -1
           end
-        elsif(my_money == 29)
+        elsif(my_money + my_total_bet == 30)
           # 무조건 올인
           this_bet = my_money
-        elsif(my_money == 28)
-          # if 무승부x 승리일 경우만
+        elsif(my_money + my_total_bet == 29)
+          if(real_win_percent>98)
+            this_bet = your_total_bet - my_total_bet
             # 콜
-          # else 무승부 포함 패배일경우
+          else  # 무승부 포함 패배일경우
+            this_bet = my_money
             # 올인
-          # end
-        else ## my_money < 28 패배 확실
+          end
+
+        else ## my_money + my_total_bet < 29 패배 확실
           if (win_percent > 95)
-            #무승부갯수 + 1개 배팅 이후 콜
-          else
-            #올인
-              this_bet = my_money
+            this_bet = my_money
           end
         end
 
