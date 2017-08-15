@@ -525,6 +525,61 @@ class MyAi
 
         elsif (@@round == 5 || @@round == 6)
 
+<<<<<<< HEAD
+=======
+          if (gab_coin >= 24)                     ### 꼼시
+            if (win_percent > 98)                   # 무조건 이길 때의 베팅
+              if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
+                this_bet = your_total_bet - my_total_bet + 1  # 1개씩 올려가며 간을 봄
+              else  # 첫 베팅일 경우
+                this_bet = 1  # 기본 금액 + 1 개만 따도 안정도 2에 매우 근사
+              end
+            else
+              this_bet = -1   # 유리한 상황이므로 걍 다이
+            end
+
+          elsif (gab_coin >= 20)                  ### 안정도 2가 조금 안되는 상황
+            if (win_percent > 98)                     # 무조건 이길 떄의 베팅
+              if(your_total_bet > my_total_bet)     # 상대가 레이즈를 했을 떄
+                this_bet = your_total_bet - my_total_bet + 1  # 1개씩 올려가며 간을 봄
+              else  # 첫 베팅일 경우
+                this_bet = 2  # 기본 금액 + 2 개만 따도 됨
+              end
+            else
+              this_bet = -1   # 유리한 상황이므로 걍 다이
+            end
+
+          elsif (gab_coin >= 16)
+
+
+          elsif (gab_coin >= 12)
+
+          elsif (gab_coin >= 8)
+
+
+          elsif (gab_coin >= 4)
+
+
+          elsif (gab_coin >= -3)
+
+
+          elsif (gab_coin >= -7)
+
+          elsif (gab_coin >= -11)
+
+          elsif (gab_coin >= -15)
+
+          elsif (gab_coin >= -19)
+
+          elsif (gab_coin >= -23)
+
+          end
+
+          ## 7라운드 이후에는 데이터 기반 로직을 활용한다.
+          #if
+
+          #end
+>>>>>>> b03e5e17843a08055f9bfccff4c3f6148899b81d
         elsif (@@round == 7 || @@round == 8)
 
         elsif @@round == 9
@@ -591,7 +646,7 @@ class MyAi
              this_bet = 1
            end
            # 1개 배팅 이후 콜
-         else(win_percent < 5)
+         else
            this_bet = -1
          end
 
@@ -907,7 +962,7 @@ class MyAi
           elsif(draw_percent > 98) #무승부
             this_bet = your_total_bet - my_total_bet
             # 콜
-          else(win_percent < 5)
+          else
             this_bet = -1
           end
         elsif @@round == 11

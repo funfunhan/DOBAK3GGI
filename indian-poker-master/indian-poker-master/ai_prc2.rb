@@ -595,7 +595,7 @@ class MyAi
              this_bet = 1
            end
            # 1개 배팅 이후 콜
-         else(win_percent < 5)
+         else
            this_bet = -1
          end
 
@@ -898,7 +898,7 @@ class MyAi
           elsif(draw_percent > 98) #무승부
             this_bet = your_total_bet - my_total_bet
             # 콜
-          else(win_percent < 5)
+          else
             this_bet = -1
           end
         elsif @@round == 11
