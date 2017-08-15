@@ -289,7 +289,7 @@ class MyAi
     ### 현재 라운드의 코인 갯수 차이가 남은 라운드 수의 두 배가 넘을 경우 무조건 승리
 
     victory = false
-    stability = gab_coin / ((21 - @@round).to_f))
+    stability = gab_coin / ((21 - @@round).to_f)
     # stablity는 안정도로 2보다 큰 경우에 무조건 이김 (2면 비김)
     if stability > 2
       victory = true
