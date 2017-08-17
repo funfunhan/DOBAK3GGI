@@ -8009,6 +8009,18 @@ class MyAi
       this_bet = (60 - (my_money + my_total_bet + your_total_bet))
     end
 
+    if win_percent == 100
+      if this_bet > (your_total_bet - my_total_bet) + (60 - (my_money + my_total_bet + your_total_bet))
+         this_bet = (your_total_bet - my_total_bet) + (60 - (my_money + my_total_bet + your_total_bet))
+      end
+    end
+
+    if this_bet != -1
+      if this_bet <your_total_bet - my_total_bet
+        this_bet = your_total_bet - my_total_bet
+      end
+    end
+
     if this_bet == -1
       @@pMBet[@@round-1] = my_total_bet
     else
